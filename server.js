@@ -2,6 +2,13 @@ const express = require("express");
 const morgan = require("morgan");
 const session = require("express-session");
 const { createRequestHandler } = require("@remix-run/express");
+const admin = require("firebase-admin");
+const configuration = require("./configuration");
+const firebase = require("firebase");
+
+const { config } = configuration;
+admin.initializeApp(config);
+firebase.initializeApp(config);
 
 let app = express();
 
@@ -19,7 +26,7 @@ app.use(
     secret: "r3mixR0x",
     resave: false,
     saveUninitialized: true,
-    sameSite: true
+    sameSite: true,
   })
 );
 
@@ -32,7 +39,7 @@ app.all(
     getLoadContext() {
       // Whatever you return here will be passed as `context` to your loaders
       // and actions.
-    }
+    },
   })
 );
 
