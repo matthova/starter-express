@@ -1,6 +1,17 @@
 import type { Loader } from "@remix-run/data";
 import { Meta, Scripts, Styles, useRouteData } from "@remix-run/react";
 import { Outlet } from "react-router-dom";
+import styled, { ThemeProvider } from "styled-components";
+
+const theme = {
+  customRed: "#FF1234",
+};
+
+const Block = styled("div")`
+  width: 100px;
+  height: 100px;
+  background-color: ${(p) => p.theme.customRed};
+`;
 
 export let loader: Loader = async () => {
   return { date: new Date() };
@@ -10,21 +21,23 @@ export default function App() {
   let data = useRouteData();
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <Meta />
-        <Styles />
-      </head>
-      <body>
-        <Outlet />
-
-        <footer>
-          <p>This page was rendered at {data.date.toLocaleString()}</p>
-        </footer>
-        <Scripts />
-      </body>
-    </html>
+    <ThemeProvider theme={theme}>
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <Meta />
+          <Styles />
+        </head>
+        <body>
+          <Block />
+          <Outlet />
+          <footer>
+            <p>This page was rendered at {data.date.toLocaleString()}</p>
+          </footer>
+          <Scripts />
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }
 
