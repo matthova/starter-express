@@ -15,20 +15,15 @@ export default function handleRequest(
     sheet.collectStyles(<Remix context={remixContext} url={request.url} />)
   );
 
-  // get the styles
-  const styles = sheet
-    .getStyleTags()
-    // remove the <style> tags
-    .replace(/(<([^>]+)>)/gi, "");
-  const styleData = Buffer.from(styles).toString("base64");
+  const styles = sheet.getStyleTags();
   sheet.seal();
 
-  return new Response("<!DOCTYPE html>" + markup, {
+  const markupWithStyles = markup.replace("</head>", `${styles}</head>`);
+  return new Response("<!DOCTYPE html>" + markupWithStyles, {
     status: responseStatusCode,
     headers: {
       ...Object.fromEntries(responseHeaders),
       "Content-Type": "text/html",
-      Link: `<data:text/css;utf-8;base64,${styleData}>; REL=stylesheet`,
     },
   });
 }
